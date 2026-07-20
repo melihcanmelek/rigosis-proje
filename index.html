@@ -1,0 +1,101 @@
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rigosis Kayıt Formu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        #sonucAlani {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Kayıt Formu</h2>
+
+    <label for="adInput">Adınız:</label>
+    <input type="text" id="adInput" placeholder="Adınızı girin">
+
+    <label for="meslekInput">Mesleğiniz:</label>
+    <input type="text" id="meslekInput" placeholder="Mesleğinizi girin">
+
+    <button id="gonderButon">Gönder</button>
+
+    <p id="sonucAlani"></p>
+
+    <script>
+        document.getElementById("gonderButon").addEventListener("click", function() {
+
+            let ad = document.getElementById("adInput").value;
+            let meslek = document.getElementById("meslekInput").value;
+
+            if (ad === "" || meslek === "") {
+                document.getElementById("sonucAlani").innerText = "Lütfen tüm alanları doldurun.";
+                document.getElementById("sonucAlani").style.color = "red";
+                return;
+            }
+
+            fetch("https://reqres.in/api/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": "free_user_3Gl8HtqDl5ss8AmS1TUmVnwizBY"
+                },
+                body: JSON.stringify({
+                    name: ad,
+                    job: meslek
+                })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                document.getElementById("sonucAlani").style.color = "green";
+                document.getElementById("sonucAlani").innerText =
+                    "Sayın " + ad + ", " + data.id + " numaralı kaydınız oluşturulmuştur.";
+            })
+            .catch(function(error) {
+                document.getElementById("sonucAlani").style.color = "red";
+                document.getElementById("sonucAlani").innerText =
+                    "Bir hata oluştu, lütfen tekrar deneyin.";
+                console.error("Hata:", error);
+            });
+
+        });
+    </script>
+
+</body>
+</html> 
